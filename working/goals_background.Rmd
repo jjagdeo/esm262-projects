@@ -1,0 +1,16 @@
+---
+title: "Goals & Data Science Background"
+author: "Jessica Jagdeo"
+date: "2/10/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Course goals: 
+I am taking this course to satisfy the requirements of the Environmental Data Science focus. I am interested in furthering my skills with R and working on projects that could benefit my future career as an environmental professional. 
+
+Data science background: 
+I have taken Allison Horst's ESM 206 class and I am currently taking her ESM 244 Advanced Data Analysis class. Since being at Bren, I have utilized R extensively for my group project. Outside of Bren, I used R this past summer during my internship at a water consulting firm.  
