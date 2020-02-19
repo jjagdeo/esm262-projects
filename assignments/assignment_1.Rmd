@@ -1,0 +1,33 @@
+---
+title: "Assignment 1"
+author: "Jessica Jagdeo"
+date: "2/10/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### Assignment 1
+
+With a partner
+
+Write function to compute something that is of interest to you, make sure it has at least 2 inputs and several parameters
+
+Add some error checking (at least two different kinds)
+
+Save your function in a .R file
+
+(Make sure you add comments to your function)
+
+In an Rmarkdown document, generate saample data for your function in two different ways,
+
+Apply the data to your function
+
+Graph and add some text describing how to interpret the results
+
+Upload both the function and the Rmarkdown file to your github - in a subfolder called Assignment 1
+
+Add a link to your github site for Assignment 1 on Gauchospace
+
