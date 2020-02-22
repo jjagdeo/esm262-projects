@@ -1,0 +1,76 @@
+---
+title: "Assignment 1"
+author: "Jessica Jagdeo"
+date: "2/10/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#### Assignment 1
+
+With a partner
+
+Write function to compute something that is of interest to you, make sure it has at least 2 inputs and several parameters
+
+Add some error checking (at least two different kinds)
+
+Save your function in a .R file
+
+(Make sure you add comments to your function)
+
+In an Rmarkdown document, generate sample data for your function in two different ways,
+
+Apply the data to your function
+
+Graph and add some text describing how to interpret the results
+
+Upload both the function and the Rmarkdown file to your github - in a subfolder called Assignment 1
+
+Add a link to your github site for Assignment 1 on Gauchospace
+
+#### Create function: : See R scripts with function in Assignment 1 folder
+```{r}
+
+# Option 1: Water balance/storage equation
+
+waterstorage = function(inflow, precip, evap, infiltrat, outflow) {
+  storage = inflow + precip - evap - infiltrat - outflow
+  precip = ifelse((precip < 0), return("Precipitation must be greater than or equal to zero"), precip)
+  evap = ifelse((evap < 0), return("Evaporation cannot be negative"), evap)
+  return(storage)
+}
+
+```
+
+```{r}
+
+# Option 2: Recurrence interval calculation
+
+recurrence = function(total_yrs, magnitude_rank) {
+  interval = ((1 + total_yrs)/magnitude_rank)
+  total_yrs = ifelse((total_yrs < 0), return("Total years must be greater than zero"))
+  return(interval)
+}
+
+```
+
+#### Generate sample data
+```{r}
+
+nsample = 100
+total_yrs = 100
+max_annual_discharge = rnorm(mean=200, sd=10, n=nsample)
+magnitude_rank = seq(1:100) # Trying to figure out how to assign magnitude rank based on generated max annual discharge
+
+# Step 1  create data frame to store results 
+# how many simulations, what do you want to keep
+
+#create a dataframe that has rows for each model run
+# columns for total years, max annual discharge generated, magnitude rank, and recurrence interval
+results = data.frame(total_yrs = total_yrs, max_annual_discharge=max_annual_discharge, magnitude_rank = magnitude_rank, interval=NA)
+
+
+```
