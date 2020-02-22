@@ -57,7 +57,7 @@ recurrence = function(total_yrs, magnitude_rank) {
 
 ```
 
-#### Generate sample data
+#### Generate sample data for recurrence interval function
 ```{r}
 
 nsample = 100
@@ -74,3 +74,6 @@ results = data.frame(total_yrs = total_yrs, max_annual_discharge=max_annual_disc
 
 
 ```
+
+
+#### Generate sample data for water balance function
