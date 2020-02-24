@@ -1,0 +1,42 @@
+---
+title: "recurrence_interval"
+author: "Jessica Jagdeo"
+date: "2/23/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+
+# Option 2: Recurrence interval calculation
+
+recurrence = function(total_yrs, magnitude_rank) {
+  interval = ((1 + total_yrs)/magnitude_rank)
+  total_yrs = ifelse((total_yrs < 0), return("Total years must be greater than zero"))
+  return(interval)
+}
+
+```
+
+#### Generate sample data for recurrence interval function
+```{r}
+
+nsample = 100
+total_yrs = 100
+max_annual_discharge = rnorm(mean=200, sd=75, n=nsample)#NOTE: I changed sd to be higher, thought it might make more interesting sample data
+magnitude_rank = seq(1:100) # Trying to figure out how to assign magnitude rank based on generated max annual discharge
+
+# Step 1  create data frame to store results 
+# how many simulations, what do you want to keep
+
+#create a dataframe that has rows for each model run
+# columns for total years, max annual discharge generated, magnitude rank, and recurrence interval
+results = data.frame(total_yrs = total_yrs, max_annual_discharge=max_annual_discharge, magnitude_rank = magnitude_rank, interval=NA)
+
+
+```
+

@@ -1,106 +1,116 @@
 ---
 title: "Assignment 1"
-author: "Jessica Jagdeo"
-date: "2/10/2020"
+author: "Jessica Jagdeo and Jenny Balmagia"
+date: "2/24/2020"
 output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE)
+library(tidyverse)
 ```
 
-#### Assignment 1
-
-With a partner
-
-Write function to compute something that is of interest to you, make sure it has at least 2 inputs and several parameters
-
-Add some error checking (at least two different kinds)
-
-Save your function in a .R file
-
-(Make sure you add comments to your function)
-
-In an Rmarkdown document, generate sample data for your function in two different ways,
-
-Apply the data to your function
-
-Graph and add some text describing how to interpret the results
-
-Upload both the function and the Rmarkdown file to your github - in a subfolder called Assignment 1
-
-Add a link to your github site for Assignment 1 on Gauchospace
-
-#### Create function: : See R scripts with function in Assignment 1 folder
+#### Create function: See R script with function waterstorage() in Assignment 1 folder
 ```{r}
+## Water balance/storage equation
 
-# Option 1: Water balance/storage equation
+# Function describing water stored in a watershed/year using simplified inflow/outflow processes
+# Function assumptions: The user must provide watershed_size in square miles and precipitation, evaporation, and runoff in inches per year
 
 waterstorage = function(precip, evap, runoff, watershed_size) {
-  storage = (precip - (evap + runoff))*watershed_size
+  storage = ((precip - (evap + runoff)) * 0.0833333) * (watershed_size * 27880000) 
+  # Multiply by watershed size to get volumetric storage from rate inputs: precip, evap, runoff
+  # Multiple watershed_size (given by user in square miles) by 27,880,000 to convert to square feet
+  # Multiply precip - (evap + runoff) (given by user in inches) by 0.0833333 to convert to feet
   precip = ifelse((precip < 0), return("Precipitation must be greater than or equal to zero"), precip)
   evap = ifelse((evap < 0), return("Evaporation cannot be negative"), evap)
   runoff = ifelse((runoff < 0), return("Runoff cannot be negative"), runoff)
   return(storage)
+  # Storage is returned in units of cubic feet per year
 }
-
 ```
-
-```{r}
-
-# Option 2: Recurrence interval calculation
-
-recurrence = function(total_yrs, magnitude_rank) {
-  interval = ((1 + total_yrs)/magnitude_rank)
-  total_yrs = ifelse((total_yrs < 0), return("Total years must be greater than zero"))
-  return(interval)
-}
-
-```
-
-#### Generate sample data for recurrence interval function
-```{r}
-
-nsample = 100
-total_yrs = 100
-max_annual_discharge = rnorm(mean=200, sd=75, n=nsample)#NOTE: I changed sd to be higher, thought it might make more interesting sample data
-magnitude_rank = seq(1:100) # Trying to figure out how to assign magnitude rank based on generated max annual discharge
-
-# Step 1  create data frame to store results 
-# how many simulations, what do you want to keep
-
-#create a dataframe that has rows for each model run
-# columns for total years, max annual discharge generated, magnitude rank, and recurrence interval
-results = data.frame(total_yrs = total_yrs, max_annual_discharge=max_annual_discharge, magnitude_rank = magnitude_rank, interval=NA)
-
-
-```
-
 
 #### Generate sample data for water balance function
 ```{r}
-#Generate sample data to test funtion
+# Generate first set of sample data to test funtion
 nsample = 100
 
-#Data created for a 10 sqmile watershed
-#sample precipitation data, inches/year
+# Data created for a 10 sq mile watershed
+# sample precipitation data, inches/year
 precip = rnorm(mean = 7, sd = 2, n = nsample)
-#sample evaporation data, inches/year
+# sample evaporation data, inches/year
 evap = rnorm(mean = 0.5, sd = 0.15, n = nsample)
-#sample runoff data, inches/year
+# sample runoff data, inches/year
 runoff = rnorm(mean = 0.7, sd = 0.2, n = nsample)
 
-#Create dataframe to store results
-results = data.frame(precip = precip, evap = evap, runoff = runoff, storage = NA)
+# Create dataframe to store results
+results = data.frame(precip_in = precip, evap_in = evap, runoff_in = runoff, storage_ft3 = NA)
 
+
+# Generate second set of sample data to test function
+nsample2 = 200
+
+# Data created for a 20 sq mile watershed
+# Sample precip data, inches/year
+precip2 = sample(x = 20:50, size = nsample2, replace = TRUE)
+# Sample evap data, inches/year
+evap2 = sample(x = 10:15, size = nsample2, replace = TRUE)
+# Sample runoff data, inches/year
+runoff2 = sample(x = 5:20, size = nsample2, replace = TRUE)
+
+# Create dataframe to store results
+results2 = data.frame(precip_in = precip2, evap_in = evap2, runoff_in = runoff2, storage_ft3 = NA)
 ```
 
-#### Test waterstorage() function with sample data and plot
+#### Test waterstorage() function with sample data
 ```{r}
-#Testing function for sample data and 10 sq mile watershed
-results$storage = waterstorage(results$precip, results$evap,results$runoff, watershed_size = 10)
+# Testing function for first set of sample data and 10 sq mile watershed
+results$storage_ft3 = waterstorage(results$precip_in, results$evap_in,results$runoff_in, watershed_size = 10)
 
 
-
+# Testing function for second set of sample data and 20 sq mile watershed
+results2$storage_ft3 = waterstorage(results2$precip_in, results2$evap_in, results2$runoff_in, watershed_size = 20)
 ```
 
+#### Plot results from waterstorage() function
+```{r}
+# Plotting results from first set of generated data
+
+results1_plot <- results %>% 
+  mutate(year = seq(1901, 2000, by = 1)) %>%  # Generating a series of years for plotting purposes
+  ggplot(aes(x = year, y = storage_ft3/1000)) +
+  geom_point(color = "darkgreen") +
+  geom_line(color = "darkgreen") +
+  theme_classic() +
+  labs(x = "Year",
+       y = expression(paste("Water Storage in 1000 ft"^"3"))) +
+  ggtitle("Water Storage from Generated Data 1") +
+  scale_y_continuous(labels = scales::comma) +
+  theme(plot.title = element_text(size = 12, hjust = 0.5))
+
+results1_plot
+```
+
+Figure 1. Water storage of a watershed with an area of 10 square miles using randomly generated data for a random period of 1901 to 2000. The amount of water stored in this watershed, based on the randomly generated precipitation, evaporation, and runoff data, varies from 50,000 to 250,000 thousand cubic feet per year. 
+
+```{r}
+# Plotting results from second set of generated data
+
+results2_plot <- results2 %>% 
+  mutate(year = seq(1801, 2000, by = 1)) %>%  # Generating a series of years for plotting purposes
+  ggplot(aes(x = year, y = storage_ft3/1000)) +
+  geom_point(color = "darkblue") +
+  geom_line(color = "darkblue") +
+  theme_classic() +
+  labs(x = "Year",
+       y = expression(paste("Water Storage in 1000 ft"^"3"))) +
+  ggtitle("Water Storage from Generated Data 2") +
+  scale_y_continuous(labels = scales::comma) +
+  theme(plot.title = element_text(size = 12, hjust = 0.5))
+
+results2_plot
+```
+
+Figure 2. Water storage of a watershed with an area of 20 square miles using randomly sampled data for a random period of 1801 to 2000. The amount of water stored in this watershed, based on the randomly sampled precipitation, evaporation, and runoff data, varies from -500,000 to 1,500,000 thousand cubic feet per year. The negative water storage implies water loss in this watershed. 
