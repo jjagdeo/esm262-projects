@@ -1,0 +1,25 @@
+---
+title: "Factors & Lists March 2nd"
+author: "Jessica Jagdeo"
+date: "3/2/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE)
+
+library(tidyverse)
+library(here)
+```
+
+```{r}
+
+species <- read_table(here("datafiles", "flowers.txt"), col_names = FALSE)
+
+#source(computediversity)
+
+computediversity(species$X1)
+
+```
+
