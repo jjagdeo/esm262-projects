@@ -56,3 +56,35 @@ fish_locations <- as.data.frame(possible_fish) %>%
 
 ```
 
+Working on assignment with Jenny:
+
+```{r}
+
+#Price - Table that has prices for different fish ($/lb)
+
+fish_price = data.frame(fish = c("Tuna","Swordfish","Salmon","Cod"), price = c(13, 9, 11, 6))
+
+#Catch - Table that has the number caught for each fish species for each location 
+
+possible_fish = c("Tuna", "Swordfish", "Salmon", "Cod")
+
+fish_catch = data.frame(loc_A = sample(possible_fish, size = 20, replace = T), loc_B = sample(possible_fish, size = 20, replace = T), loc_C = sample(possible_fish, size = 20, replace = T))
+
+#Additional sample data for catch by location:
+
+fish_locations <- as.data.frame(possible_fish) %>% 
+  mutate(Trinidad = sample(x = 10:50, size = 4, replace = TRUE),
+         Jamaica = sample(x = 10:50, size = 4, replace = TRUE),
+         Guyana = sample(x = 10:50, size = 4, replace = TRUE),
+         Bahamas = sample(x = 10:50, size = 4, replace = TRUE),
+         Barbados = sample(x = 10:50, size = 4, replace = TRUE))
+
+#test
+
+fish_info(catch = fish_locations, price = fish_price) # For some reason, it seems to be returning the min fish caught at each location...?
+
+fish_catch = as.factor(fish_catch)
+which.max(summary(fish_catch$loc_B))
+
+```
+
