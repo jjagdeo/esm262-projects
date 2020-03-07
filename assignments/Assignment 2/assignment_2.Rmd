@@ -6,7 +6,10 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE,
+                      warning = FALSE,
+                      message = FALSE)
+library(tidyverse)
 ```
 
 Work in pairs
@@ -28,3 +31,28 @@ if user requests it graph of revenue by location and total revenue (as text)
 Place your function in an *.R file
 
 Generate some example data for your function; and show how this is created and used in an R markdown document Submit as usual as a git link on gauchospace
+
+```{r}
+
+# Generate a table that has prices for different fish
+
+possible_fish = c("snapper","lionfish","grouper","hogfish","goatfish")
+
+fish_cost <- as.data.frame(possible_fish) %>% 
+  mutate(fish_prices = c(2, 4, 6, 8, 10))
+
+# Generate a table that has the number caught for each species for each location:
+## Each location is a different column
+## Each fish is in a different row
+
+fish_locations <- as.data.frame(possible_fish) %>% 
+  mutate(Trinidad = sample(x = 10:50, size = 5, replace = TRUE),
+         Jamaica = sample(x = 10:50, size = 5, replace = TRUE),
+         Guyana = sample(x = 10:50, size = 5, replace = TRUE),
+         Bahamas = sample(x = 10:50, size = 5, replace = TRUE),
+         Barbados = sample(x = 10:50, size = 5, replace = TRUE)) 
+
+
+
+```
+
