@@ -1,0 +1,105 @@
+---
+title: "Package Testing"
+author: "Jessica Jagdeo"
+date: "3/10/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE)
+```
+
+
+```{r}
+
+library(tidyverse)
+library(readxl)
+library(lubridate)
+library(janitor)
+
+```
+
+```{r}
+
+preciptest <- read_excel("421dailys.xls") %>% 
+  tail(-8) %>% 
+  row_to_names(row_number = 1) %>% 
+  clean_names()
+
+  precip_subset <- preciptest %>%
+    mutate(year = as.numeric(year),
+           month = as.numeric(month),
+           day = as.numeric(day),
+           daily_rain = as.numeric(daily_rain)) %>%
+    filter(station_id == "421") %>% 
+    select(daily_rain)
+
+   precip_subset_max <- apply(precip_subset, MARGIN = 2, FUN = max)
+   
+rainfall = rnorm(mean = 7, sd = 2, n = 1460)
+date = rep(seq(from = as.Date("1995-01-01"), to = as.Date("1995-12-31"), by = 'day'), 4)
+station = rep(c("Cachuma", "Gibraltar", "Jameson", "San Marcos"), times = 1, each = 365)
+precip <- data.frame(date, station, rainfall)
+
+
+  precip_subset_2 <- precip %>%
+    dplyr::mutate(year_month_day = lubridate::parse_date_time(date, "ymd"),
+           year = lubridate::year(date),
+           month = lubridate::month(date),
+           day = lubridate::day(date),
+           rain = as.numeric(rain)) %>%
+    dplyr::filter(station == "station") %>%
+    dplyr::select(rain)
+
+  
+```
+
+```{r}
+
+# Testing 
+
+library(tidyverse)
+
+  precip_subset <- precip %>%
+    dplyr::mutate(year_month_day = lubridate::parse_date_time(date, "ymd"),
+           year = lubridate::year(date),
+           month = lubridate::month(date),
+           day = lubridate::day(date),
+           rainfall = as.numeric(rainfall)) %>%
+    dplyr::filter(station == "Cachuma") 
+  
+    precip_array <- array(data = precip$rainfall,
+                      dim = c(1,1),
+                      dimnames = list(
+                        1:1, # days of the month
+                        1:1)) 
+
+  precip_subset_max <- apply(precip_array, MARGIN = 2, FUN = max)
+  
+  # max(precip_subset$rainfall)
+  # 
+  # df.agg <- aggregate(rainfall ~ date, precip_subset, max)
+  # 
+  # precip_subset_max <- apply(precip_subset, MARGIN = 2, FUN = max)
+
+```
+
+```{r}
+
+# if (station == "Cachuma")
+#     precip_subset <- precip %>%
+#     dplyr::mutate(year_month_day = lubridate::parse_date_time(date, "ymd"),
+#            rainfall = as.numeric(rainfall)) %>%
+#     dplyr::filter(station == "Cachuma") %>%
+#     dplyr::select(rainfall)
+# else
+#     precip_subset <- precip %>%
+#     dplyr::mutate(year_month_day = lubridate::parse_date_time(date, "ymd"),
+#            rainfall = as.numeric(rainfall)) %>%
+#     dplyr::filter(station == "Gibraltar") %>%
+#     dplyr::select(rainfall)
+
+```
+
